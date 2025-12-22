@@ -2,141 +2,65 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>商品詳情 - 我的購物商城</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品詳情 - 手機通用版</title>
     <style>
-        /* --- 1. 基礎佈局 --- */
-        body { font-family: "Microsoft JhengHei", Arial, sans-serif; background: #f4f4f4; margin: 0; padding-top: 50px; display: flex; justify-content: center; }
-        .product-container { width: 95%; max-width: 1200px; display: flex; flex-direction: column; align-items: center; }
-        
-        .product-box { display: flex; gap: 50px; background: white; padding: 40px; border-radius: 12px; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.1); box-sizing: border-box; }
-        .img-side { flex: 1; height: 500px; background: #eee; border-radius: 10px; overflow: hidden; }
-        .img-side img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .info-side { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-        .price { color: #d9534f; font-size: 45px; font-weight: bold; margin: 20px 0; }
-        .desc-box { line-height: 1.8; color: #555; background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
-        
-        .add-btn { background: #28a745; color: white; border: none; padding: 18px; cursor: pointer; font-size: 22px; border-radius: 8px; transition: 0.3s; font-weight: bold; }
-        .add-btn:hover { background: #218838; transform: translateY(-3px); }
+        body { font-family: "Microsoft JhengHei", Arial; background: #f4f4f4; margin: 0; padding: 0; }
+        /* 核心：手機上下排，電腦左右排 */
+        .product-box { 
+            display: flex; 
+            flex-direction: column; 
+            background: white; 
+            min-height: 100vh;
+        }
+        @media (min-width: 768px) { 
+            .product-box { 
+                flex-direction: row; 
+                max-width: 1000px; 
+                margin: 50px auto; 
+                min-height: auto; 
+                border-radius: 12px;
+                padding: 40px;
+            } 
+        }
 
-        /* --- 2. 側邊購物車面板 (修正：補回不見的部分) --- */
-        .sidebar { position: fixed; top: 0; right: -320px; width: 320px; height: 100%; background: #222; color: #eee; padding: 25px; transition: 0.4s ease; z-index: 2000; box-shadow: -5px 0 20px rgba(0,0,0,0.5); box-sizing: border-box; }
-        .sidebar.active { right: 0; }
-        .toggle-btn { position: fixed; top: 50%; right: 0; transform: translateY(-50%); z-index: 2001; padding: 15px 20px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 10px 0 0 10px; font-size: 24px; }
-        .sidebar-header { font-size: 22px; font-weight: bold; border-bottom: 1px solid #444; padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; }
-        .sidebar-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 14px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .sidebar-total { font-size: 24px; font-weight: bold; margin-top: 25px; padding-top: 15px; border-top: 2px solid #444; color: #fff; display: flex; justify-content: space-between; }
-        .checkout-link { display: block; width: 100%; padding: 15px; background: #28a745; color: white; text-align: center; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 25px; box-sizing: border-box; }
+        .img-side { width: 100%; height: 350px; overflow: hidden; }
+        @media (min-width: 768px) { .img-side { flex: 1; height: 450px; border-radius: 10px; } }
+        .img-side img { width: 100%; height: 100%; object-fit: cover; }
+
+        .info-side { padding: 20px; flex: 1; }
+        .price { color: #d9534f; font-size: 32px; font-weight: bold; margin: 15px 0; }
+        .add-btn { width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 8px; font-size: 20px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div class="product-container">
-        <div class="product-box">
-            <div class="img-side"><img id="pImg" src="" alt="商品圖片"></div>
-            <div class="info-side">
-                <h1 id="pName" style="margin:0;">載入中...</h1>
-                <div class="price" id="pPrice">$ 0</div>
-                <div class="desc-box" id="pDesc">正在讀取商品資訊...</div>
-                
-                <div style="margin-bottom: 20px; font-size: 18px;">
-                    數量：<input type="number" id="qtyInput" value="1" min="1" style="width: 60px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-                </div>
-                
-                <button class="add-btn" onclick="addToCart()">🛒 加入購物車</button>
-                <a href="1203.html" style="margin-top:25px; display:inline-block; color:#007bff; text-decoration:none; font-weight:bold;">← 返回首頁繼續逛</a>
-            </div>
+    <div class="product-box">
+        <div class="img-side"><img id="pImg" src=""></div>
+        <div class="info-side">
+            <h1 id="pName" style="font-size: 24px; margin: 0;">載入中...</h1>
+            <div class="price" id="pPrice">$ 0</div>
+            <p id="pDesc" style="color: #666; line-height: 1.6;"></p>
+            <button class="add-btn" onclick="addToCart()">🛒 加入購物車</button>
+            <a href="index.html" style="display:block; text-align:center; margin-top:20px; color:#007bff; text-decoration:none;">← 返回首頁</a>
         </div>
     </div>
-
-    <button class="toggle-btn" onclick="toggleSidebar()">🛒</button>
-    <aside class="sidebar" id="mainSidebar">
-        <div class="sidebar-header">
-            <span>我的購物清單</span>
-            <span onclick="toggleSidebar()" style="cursor:pointer;">&times;</span>
-        </div>
-        <div id="sidebarContent"></div>
-        <div class="sidebar-total">
-            <span>總計:</span>
-            <span id="sidebarTotalText">$ 0</span>
-        </div>
-        <a href="cart.html" class="checkout-link">前往結帳頁面</a>
-    </aside>
-
     <script src="products.js"></script>
     <script>
-        // 1. 初始化商品資料
         const pid = new URLSearchParams(window.location.search).get('id');
         const product = allProducts.find(p => p.id === pid);
-
         if(product) {
             document.getElementById('pName').innerText = product.name;
             document.getElementById('pPrice').innerText = `$ ${product.price.toLocaleString()}`;
             document.getElementById('pDesc').innerText = product.desc;
             document.getElementById('pImg').src = product.image;
         }
-
-        // 2. 側邊欄控制
-        function toggleSidebar() { 
-            document.getElementById('mainSidebar').classList.toggle('active'); 
-        }
-
-        // 3. 加入購物車邏輯 (確保包含圖片)
         function addToCart() {
-            if(!product) return;
-            const qty = parseInt(document.getElementById('qtyInput').value) || 1;
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             const exist = cart.find(i => i.id === product.id);
-            
-            if(exist) {
-                exist.qty += qty;
-            } else {
-                // 【關鍵】確保存入 image 網址，結帳頁才抓得到圖
-                cart.push({
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.image,
-                    qty: qty
-                });
-            }
+            if(exist) exist.qty += 1; else cart.push({...product, qty: 1});
             localStorage.setItem('cart', JSON.stringify(cart));
-            
-            // 加入後動作：更新側邊欄並自動打開它
-            refreshSidebar();
-            document.getElementById('mainSidebar').classList.add('active');
+            alert("已加入購物車！");
         }
-
-        // 4. 更新側邊欄內容
-        function refreshSidebar() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const container = document.getElementById('sidebarContent');
-            const totalText = document.getElementById('sidebarTotalText');
-            let total = 0, html = '';
-            
-            cart.forEach(item => {
-                const sub = item.price * item.qty;
-                total += sub;
-                html += `
-                    <div class="sidebar-item">
-                        <div>
-                            <div style="font-weight:bold; color:#fff;">${item.name}</div>
-                            <div style="color:#aaa; font-size:12px;">$ ${item.price.toLocaleString()} x ${item.qty}</div>
-                        </div>
-                        <div style="color:#28a745; font-weight:bold;">$ ${sub.toLocaleString()}</div>
-                    </div>`;
-            });
-            container.innerHTML = html || '<p style="text-align:center; color:#888;">購物車是空的</p>';
-            totalText.textContent = `$ ${total.toLocaleString()}`;
-        }
-
-        // 監聽跨頁變動
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'cart') refreshSidebar();
-        });
-
-        // 初始讀取
-        window.onload = refreshSidebar;
     </script>
 </body>
 </html>
