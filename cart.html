@@ -5,102 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>您的購物車 - 結帳清單</title>
     <style>
-        /* --- 基礎佈局 --- */
+        /* --- 1. 基礎佈局 --- */
         * { box-sizing: border-box; }
         body { font-family: "Microsoft JhengHei", Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 15px; display: flex; justify-content: center; }
-        .cart-box { width: 100%; max-width: 800px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .cart-box { width: 100%; max-width: 900px; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
         
-        h1 { font-size: 22px; margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        h1 { font-size: 24px; margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* 商品清單項目 */
+        /* --- 2. 購物清單項目 --- */
         .cart-item { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; }
-        .cart-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; margin-right: 15px; background: #eee; flex-shrink: 0; }
+        .cart-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-right: 15px; background: #eee; flex-shrink: 0; }
         .item-info { flex: 1; }
-        .item-name { font-weight: bold; font-size: 15px; margin-bottom: 3px; }
-        .item-sub { font-size: 13px; color: #777; }
-        .item-total { font-weight: bold; color: #d9534f; font-size: 16px; margin-left: 10px; }
+        .item-name { font-weight: bold; font-size: 16px; margin-bottom: 5px; color: #333; }
+        .item-sub { font-size: 14px; color: #777; }
+        .item-total { font-weight: bold; color: #d9534f; font-size: 18px; margin-left: 10px; }
 
-        /* 總計與按鈕區塊 (關鍵修正：響應式按鈕) */
-        .summary-box { background: #fafafa; padding: 20px; margin-top: 25px; border-radius: 10px; text-align: center; }
+        /* --- 3. 總計與按鈕區塊 --- */
+        .summary-box { background: #fafafa; padding: 25px; margin-top: 30px; border-radius: 12px; text-align: center; }
         @media (min-width: 768px) { .summary-box { text-align: right; } }
 
-        .total-price { font-size: 32px; color: #d9534f; font-weight: bold; margin: 10px 0; }
+        .total-price { font-size: 36px; color: #d9534f; font-weight: bold; margin: 10px 0; }
 
-        /* 按鈕群組：手機上下排，電腦左右排 */
-        .btn-group { 
-            display: flex; 
-            flex-direction: column; /* 手機預設上下排列 */
+        /* 按鈕群組排版 */
+        .btn-main { width: 100%; padding: 18px; background: #28a745; color: white; border: none; border-radius: 10px; font-size: 20px; font-weight: bold; cursor: pointer; margin-bottom: 15px; }
+        .btn-main:hover { background: #218838; }
+
+        .action-links { display: flex; justify-content: space-between; gap: 10px; }
+        .btn-home { flex: 1; text-decoration: none; background: #007bff; color: white; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: bold; text-align: center; }
+        .btn-clear-all { flex: 1; background: #6c757d; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; }
+
+        /* --- 4. 推薦商品 (固定顯示 5 樣) --- */
+        .rec-section { margin-top: 50px; width: 100%; max-width: 900px; }
+        .rec-title { font-size: 20px; font-weight: bold; margin-bottom: 20px; border-left: 6px solid #007bff; padding-left: 12px; }
+        .rec-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); /* 手機預設 2 欄 */
             gap: 15px; 
-            margin-top: 20px; 
         }
         @media (min-width: 768px) { 
-            .btn-group { flex-direction: row-reverse; justify-content: space-between; align-items: center; } 
+            .rec-grid { grid-template-columns: repeat(5, 1fr); } /* 電腦版固定 5 欄 */
         }
 
-        .btn-checkout { 
-            width: 100%; 
-            padding: 16px; 
-            background: #d9534f; 
-            color: white; 
-            border: none; 
-            border-radius: 8px; 
-            font-size: 18px; 
-            font-weight: bold; 
-            cursor: pointer; 
-        }
-        @media (min-width: 768px) { .btn-checkout { width: 250px; } }
-
-        .btn-secondary-group { display: flex; justify-content: space-between; gap: 10px; width: 100%; }
-        @media (min-width: 768px) { .btn-secondary-group { width: auto; } }
-
-        .link-home { text-decoration: none; color: #007bff; font-weight: bold; font-size: 15px; padding: 10px 0; }
-        .btn-clear { background: none; border: 1px solid #ccc; color: #999; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 13px; }
-
-        /* 推薦商品 (手機 2 欄) */
-        .rec-section { margin-top: 40px; }
-        .rec-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        @media (min-width: 768px) { .rec-grid { grid-template-columns: repeat(5, 1fr); } }
-        .rec-card { background: white; border: 1px solid #eee; border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; }
-        .rec-card img { width: 100%; height: 100px; object-fit: cover; border-radius: 4px; }
+        .rec-card { background: white; border: 1px solid #eee; border-radius: 10px; padding: 12px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .rec-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .rec-card img { width: 100%; height: 110px; object-fit: cover; border-radius: 6px; margin-bottom: 10px; }
+        .rec-name { font-size: 13px; font-weight: bold; height: 36px; overflow: hidden; line-height: 1.4; color: #333; }
+        .rec-price { color: #d9534f; font-weight: bold; font-size: 15px; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-<div style="width: 100%; max-width: 800px;">
+<div style="width: 100%; max-width: 900px;">
     <div class="cart-box">
-        <h1>🛒 您的結帳清單</h1>
+        <h1>
+            <span>🛒 您的結帳清單</span>
+        </h1>
+        
         <div id="cartBody"></div>
 
         <div class="summary-box">
-            <div style="color:#666; font-size: 14px;">應付總計</div>
+            <div style="color:#666; font-size: 15px;">本次消費總計</div>
             <div class="total-price" id="finalTotal">$ 0</div>
             
-            <div class="btn-group">
-                <button class="btn-checkout" onclick="alert('訂單已提交！')">確認下單結帳</button>
-                
-                <div class="btn-secondary-group">
-                    <a href="index.html" class="link-home">← 繼續購物</a>
-                    <button class="btn-clear" onclick="clearCart()">清空購物車</button>
-                </div>
+            <button class="btn-main" onclick="alert('訂單提交成功！謝謝您的購買')">確認下單結帳</button>
+            
+            <div class="action-links">
+                <a href="index.html" class="btn-home">← 繼續購物</a>
+                <button class="btn-clear-all" onclick="clearCart()">🗑️ 清空購物車</button>
             </div>
         </div>
     </div>
 
     <div class="rec-section">
-        <h3 style="border-left: 5px solid #007bff; padding-left: 10px;">加購推薦</h3>
+        <div class="rec-title">為您精選加購商品</div>
         <div id="recGrid" class="rec-grid"></div>
     </div>
 </div>
 
 <script src="products.js"></script>
 <script>
+    // 1. 渲染購物車清單
     function renderCart() {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         const container = document.getElementById('cartBody');
         let total = 0, html = '';
 
         if (cart.length === 0) {
-            container.innerHTML = '<div style="padding:40px; text-align:center; color:#999;">購物車是空的</div>';
+            container.innerHTML = `
+                <div style="padding:60px 0; text-align:center;">
+                    <div style="font-size:50px; margin-bottom:10px;">Empty</div>
+                    <div style="color:#999;">購物車是空的，快去選購吧！</div>
+                </div>`;
             document.getElementById('finalTotal').textContent = '$ 0';
             return;
         }
@@ -122,27 +117,41 @@
         document.getElementById('finalTotal').textContent = `$ ${total.toLocaleString()}`;
     }
 
+    // 2. 渲染推薦商品 (強制顯示 5 樣)
     function renderRecs() {
         const grid = document.getElementById('recGrid');
-        if (typeof allProducts === 'undefined') return;
-        const shuffled = [...allProducts].sort(() => 0.5 - Math.random()).slice(0, 4);
+        if (typeof allProducts === 'undefined' || allProducts.length === 0) return;
+        
+        // 隨機取出 5 樣商品
+        const shuffled = [...allProducts].sort(() => 0.5 - Math.random()).slice(0, 5);
+        
         grid.innerHTML = shuffled.map(p => `
             <div class="rec-card" onclick="window.open('product.html?id=${p.id}', '_blank')">
                 <img src="${p.image}">
-                <div style="font-size:12px; font-weight:bold; margin-top:5px; height:30px; overflow:hidden;">${p.name}</div>
-                <div style="color:red; font-size:14px;">$${p.price.toLocaleString()}</div>
+                <div class="rec-name">${p.name}</div>
+                <div class="rec-price">$${p.price.toLocaleString()}</div>
             </div>
         `).join('');
     }
 
+    // 3. 清空購物車功能
     function clearCart() {
-        if (confirm("確定要清空嗎？")) {
+        if (confirm("確定要移除購物車內的所有商品嗎？")) {
             localStorage.removeItem('cart');
             renderCart();
+            // 觸發 storage 事件通知其他分頁（如首頁側邊欄）同步清空
+            window.dispatchEvent(new Event('storage'));
         }
     }
 
-    window.onload = () => { renderCart(); renderRecs(); };
+    // 4. 初始化
+    window.onload = () => {
+        renderCart();
+        renderRecs();
+    };
+
+    // 監聽跨分頁更新
+    window.addEventListener('storage', renderCart);
 </script>
 
 </body>
