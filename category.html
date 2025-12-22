@@ -2,51 +2,89 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>分類列表 - 手機通用版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>分類列表 - 我的購物商城</title>
     <style>
-        body { font-family: "Microsoft JhengHei", Arial; background: #f8f8f8; margin: 0; padding: 20px; }
-        .container { max-width: 1200px; margin: auto; }
+        body { font-family: "Microsoft JhengHei", Arial; background: #f8f8f8; margin: 0; padding: 0; display: flex; justify-content: center; }
+        .container { width: 95%; max-width: 1200px; padding: 20px 0; }
         .back-link { display: inline-block; margin-bottom: 20px; color: #007bff; text-decoration: none; font-weight: bold; }
         
-        /* 手機版網格：每排 2 個 */
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 15px; 
-        }
-        /* 電腦版網格：每排 4 個 */
+        /* 響應式網格 */
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         @media (min-width: 768px) { .grid { grid-template-columns: repeat(4, 1fr); gap: 25px; } }
 
-        .item-card { background: white; padding: 10px; text-align: center; border-radius: 8px; border: 1px solid #eee; cursor: pointer; }
-        .item-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 5px; }
+        .item-card { background: white; padding: 10px; text-align: center; border-radius: 8px; border: 1px solid #eee; cursor: pointer; transition: 0.3s; }
+        .item-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .item-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 5px; background: #eee; }
         @media (min-width: 768px) { .item-card img { height: 200px; } }
         
-        .price { color: #d9534f; font-size: 18px; font-weight: bold; }
+        .price { color: #d9534f; font-size: 20px; font-weight: bold; margin-top: 5px; }
+
+        /* 側邊購物車樣式 */
+        .sidebar { position: fixed; top: 0; right: -100%; width: 85%; height: 100%; background: #222; color: #eee; padding: 20px; transition: 0.4s; z-index: 2000; box-sizing: border-box; }
+        @media (min-width: 768px) { .sidebar { width: 320px; right: -320px; } }
+        .sidebar.active { right: 0; }
+        .cart-toggle { position: fixed; bottom: 25px; right: 25px; width: 65px; height: 65px; background: #007bff; color: white; border: none; border-radius: 50%; font-size: 28px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2001; }
+        .sidebar-item { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #444; padding-bottom: 8px; font-size: 14px; }
     </style>
 </head>
 <body>
     <div class="container">
         <a href="index.html" class="back-link">← 返回首頁</a>
-        <h1 id="categoryTitle" style="font-size: 24px;">載入中...</h1>
+        <h1 id="categoryTitle" style="font-size: 24px; margin-bottom: 25px; border-left: 6px solid #333; padding-left: 15px;">載入中...</h1>
         <div class="grid" id="productList"></div>
     </div>
 
+    <button class="cart-toggle" onclick="toggleCart()">🛒</button>
+    <aside class="sidebar" id="sidebar">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #444; padding-bottom:15px;">
+            <h3 style="margin:0;">🛒 購物清單</h3>
+            <span onclick="toggleCart()" style="font-size:35px; cursor:pointer;">&times;</span>
+        </div>
+        <div id="cartList" style="margin-top:20px;"></div>
+        <div style="margin-top:20px; border-top:1px solid #444; padding-top:20px;">
+            <div style="display:flex; justify-content:space-between; font-size:22px; font-weight:bold;">
+                <span>總計:</span>
+                <span id="totalTxt" style="color:#28a745;">$ 0</span>
+            </div>
+            <a href="cart.html" style="display:block; margin-top:25px; background:#28a745; color:white; text-align:center; padding:16px; text-decoration:none; border-radius:8px; font-weight:bold;">前往結帳</a>
+        </div>
+    </aside>
+
     <script src="products.js"></script>
     <script>
+        // 1. 分類渲染
         const params = new URLSearchParams(window.location.search);
         const catName = params.get('name') || "電子產品";
         document.getElementById('categoryTitle').innerText = `分類：${catName}`;
 
-        const grid = document.getElementById('productList');
-        const filtered = allProducts.filter(p => p.category === catName);
-        grid.innerHTML = filtered.map(p => `
-            <div class="item-card" onclick="window.open('product.html?id=${p.id}', '_blank')">
-                <img src="${p.image}">
-                <div style="font-weight:bold; margin-top:10px; height:36px; overflow:hidden;">${p.name}</div>
-                <div class="price">$ ${p.price.toLocaleString()}</div>
-            </div>
-        `).join('');
+        function renderCategory() {
+            const grid = document.getElementById('productList');
+            const filtered = allProducts.filter(p => p.category === catName);
+            grid.innerHTML = filtered.map(p => `
+                <div class="item-card" onclick="window.open('product.html?id=${p.id}', '_blank')">
+                    <img src="${p.image}">
+                    <div style="font-weight:bold; margin-top:10px; height:40px; overflow:hidden;">${p.name}</div>
+                    <div class="price">$ ${p.price.toLocaleString()}</div>
+                </div>
+            `).join('');
+        }
+
+        // 2. 側邊欄邏輯
+        function toggleCart() { document.getElementById('sidebar').classList.toggle('active'); }
+        function updateCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let total = 0, html = '';
+            cart.forEach(i => {
+                total += i.price * i.qty;
+                html += `<div class="sidebar-item"><span>${i.name} x${i.qty}</span><span>$${(i.price*i.qty).toLocaleString()}</span></div>`;
+            });
+            document.getElementById('cartList').innerHTML = html || '<p>購物車是空的</p>';
+            document.getElementById('totalTxt').innerText = `$ ${total.toLocaleString()}`;
+        }
+
+        window.onload = () => { renderCategory(); updateCart(); };
+        window.addEventListener('storage', updateCart);
     </script>
 </body>
 </html>
