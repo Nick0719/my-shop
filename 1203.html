@@ -5,98 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的購物商城 - 官方首頁</title>
     <style>
-        /* --- 1. 基礎佈局與導覽 --- */
+        /* --- 1. 基礎佈局 --- */
         body { margin: 0; padding: 0; font-family: "Microsoft JhengHei", Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; }
         .main-container { width: 95%; max-width: 1800px; padding: 20px 0; }
+        .top-nav { display: flex; align-items: center; gap: 40px; margin-bottom: 30px; padding: 10px 0; }
+        .header-tag { font-size: 30px; font-weight: bold; width: 60px; height: 60px; border: 3px solid #333; border-radius: 50%; display: flex; justify-content: center; align-items: center; background: white; flex-shrink: 0; }
+        .category-nav a { text-decoration: none; color: #333; background-color: white; padding: 10px 25px; border: 1.5px solid #333; border-radius: 30px; font-weight: bold; font-size: 16px; margin-right: 10px; transition: 0.3s; }
+        .category-nav a:hover { background-color: #333; color: white; transform: translateY(-3px); }
 
-        /* 頂部導覽列 (標籤與分類並排) */
-        .top-nav {
-            display: flex;
-            align-items: center;
-            gap: 40px;
-            margin-bottom: 30px;
-            padding: 10px 0;
-        }
-        .header-tag { 
-            font-size: 30px; font-weight: bold; width: 60px; height: 60px; 
-            border: 3px solid #333; border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center; 
-            background: white; flex-shrink: 0;
-        }
-        .category-nav {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .category-nav a {
-            text-decoration: none;
-            color: #333;
-            background-color: white;
-            padding: 10px 25px;
-            border: 1.5px solid #333;
-            border-radius: 30px;
-            font-weight: bold;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-        .category-nav a:hover {
-            background-color: #333;
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
+        /* --- 2. 輪播圖 --- */
+        .carousel-panel { width: 100%; height: 450px; background-color: white; border: 1px solid #ddd; overflow: hidden; position: relative; border-radius: 10px; margin-bottom: 50px; }
+        .slides-container { display: flex; width: 300%; height: 100%; transition: transform 0.6s ease; }
+        .slide { flex-shrink: 0; width: 33.333%; height: 100%; display: flex; justify-content: center; align-items: center; font-size: 48px; font-weight: bold; color: #fff; }
 
-        /* --- 2. 輪播圖區塊 --- */
-        .carousel-wrapper { width: 100%; margin-bottom: 50px; }
-        .carousel-panel { width: 100%; height: 450px; background-color: white; border: 1px solid #ddd; overflow: hidden; position: relative; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .slides-container { display: flex; width: 300%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-        .slide { flex-shrink: 0; width: 33.333%; height: 100%; display: flex; justify-content: center; align-items: center; font-size: 48px; font-weight: bold; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-
-        /* --- 3. 推薦商品網格 (5欄) --- */
+        /* --- 3. 商品網格 --- */
         .section-title { font-size: 28px; margin-bottom: 25px; font-weight: bold; border-left: 8px solid #007bff; padding-left: 15px; }
-        .product-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 25px; width: 100%; margin-bottom: 60px; }
+        .product-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 25px; width: 100%; }
         .product-card { border: 1px solid #eee; background-color: white; transition: 0.3s; border-radius: 8px; overflow: hidden; text-align: center; cursor: pointer; }
         .product-card:hover { transform: translateY(-8px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-        
-        /* --- 【新增】商品圖片容器樣式 --- */
         .card-img-container { height: 220px; background-color: #f9f9f9; overflow: hidden; }
         .card-img-container img { width: 100%; height: 100%; object-fit: cover; }
-        
         .card-info { padding: 18px; }
-        .card-name { font-size: 18px; margin: 8px 0; color: #333; font-weight: bold; height: 44px; overflow: hidden; }
+        .card-name { font-size: 18px; margin: 8px 0; font-weight: bold; height: 44px; overflow: hidden; }
         .card-price { color: #d9534f; font-weight: bold; font-size: 22px; }
 
-        /* --- 4. 側邊購物車面板 --- */
-        .sidebar { position: fixed; top: 0; right: -320px; width: 320px; height: 100%; background: #222; color: #eee; padding: 25px; transition: 0.4s ease; z-index: 2000; box-shadow: -5px 0 20px rgba(0,0,0,0.5); box-sizing: border-box; }
+        /* --- 4. 側邊購物車 --- */
+        .sidebar { position: fixed; top: 0; right: -320px; width: 320px; height: 100%; background: #222; color: #eee; padding: 25px; transition: 0.4s; z-index: 2000; box-sizing: border-box; }
         .sidebar.active { right: 0; }
         .toggle-btn { position: fixed; top: 50%; right: 0; transform: translateY(-50%); z-index: 2001; padding: 15px 20px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 10px 0 0 10px; font-size: 24px; }
-        .sidebar-header { font-size: 22px; font-weight: bold; border-bottom: 1px solid #444; padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; }
-        
-        /* --- 【新增】購物車內商品單列樣式 --- */
-        .sidebar-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 14px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        
-        .sidebar-total { font-size: 24px; font-weight: bold; margin-top: 25px; padding-top: 15px; border-top: 2px solid #444; color: #fff; display: flex; justify-content: space-between; }
-        .checkout-link { display: block; width: 100%; padding: 15px; background: #28a745; color: white; text-align: center; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 25px; box-sizing: border-box; }
-
-        /* --- 5. 頁腳導覽列 --- */
-        .site-footer { background-color: #222; color: #ccc; padding: 60px 0 30px; width: 100%; margin-top: 40px; }
-        .footer-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; gap: 40px; padding: 0 20px; }
-        .footer-sec h4 { color: #fff; margin-bottom: 20px; font-size: 18px; border-bottom: 1px solid #444; padding-bottom: 10px; }
-        .footer-links a { color: #aaa; text-decoration: none; margin-bottom: 12px; display: block; transition: 0.3s; }
-        .footer-links a:hover { color: #fff; transform: translateX(5px); }
-        .footer-bottom { text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid #333; font-size: 14px; color: #666; }
-        /* --- 側邊欄外掛樣式 --- */
-.sidebar { position: fixed; top: 0; right: -320px; width: 320px; height: 100%; background: #222; color: #eee; padding: 25px; transition: 0.4s ease; z-index: 2000; box-shadow: -5px 0 20px rgba(0,0,0,0.5); box-sizing: border-box; }
-.sidebar.active { right: 0; }
-.toggle-btn { position: fixed; top: 50%; right: 0; transform: translateY(-50%); z-index: 2001; padding: 15px 20px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 10px 0 0 10px; font-size: 24px; }
-.sidebar-header { font-size: 22px; font-weight: bold; border-bottom: 1px solid #444; padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; }
-.sidebar-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 14px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-.sidebar-total { font-size: 24px; font-weight: bold; margin-top: 25px; padding-top: 15px; border-top: 2px solid #444; color: #fff; display: flex; justify-content: space-between; }
-.checkout-link { display: block; width: 100%; padding: 15px; background: #28a745; color: white; text-align: center; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 25px; box-sizing: border-box; }
-
-/* 讓原本的 card-img 可以顯示圖片 */
-.card-img { overflow: hidden; }
-.card-img img { width: 100%; height: 100%; object-fit: cover; }
+        .sidebar-item { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #444; padding-bottom: 10px; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -105,200 +42,80 @@
         <header class="top-nav">
             <div class="header-tag">GO</div>
             <nav class="category-nav">
-                <a href="category.html?name=電子產品" target="_blank">電子產品</a>
-                <a href="category.html?name=居家生活" target="_blank">居家生活</a>
-                <a href="category.html?name=服飾配件" target="_blank">服飾配件</a>
-                <a href="category.html?name=美食飲品" target="_blank">美食飲品</a>
+                <a href="category.html?name=電子產品">電子產品</a>
+                <a href="category.html?name=居家生活">居家生活</a>
+                <a href="category.html?name=美食飲品">美食飲品</a>
             </nav>
         </header>
 
-        <section class="carousel-wrapper">
-            <div class="carousel-panel">
-                <div class="slides-container" id="slidesContainer">
-                    <div class="slide" style="background: linear-gradient(45deg, #FF512F, #DD2476);">年終大促銷 - 全館5折起</div>
-                    <div class="slide" style="background: linear-gradient(45deg, #2193b0, #6dd5ed);">春季新品上市 - 搶先體驗</div>
-                    <div class="slide" style="background: linear-gradient(45deg, #11998e, #38ef7d);">綠色生活節 - 環保商品特選</div>
-                </div>
+        <div class="carousel-panel">
+            <div class="slides-container" id="slidesContainer">
+                <div class="slide" style="background: linear-gradient(45deg, #FF512F, #DD2476);">年終大促</div>
+                <div class="slide" style="background: linear-gradient(45deg, #2193b0, #6dd5ed);">春季新品</div>
+                <div class="slide" style="background: linear-gradient(45deg, #11998e, #38ef7d);">環保生活</div>
             </div>
-        </section>
+        </div>
 
         <section>
             <div class="section-title">每日推薦商品</div>
             <div class="product-grid" id="recommendationGrid"></div>
         </section>
-
-        <footer class="site-footer">
-            <div class="footer-container">
-                <div class="footer-sec">
-                    <h4>關於我們</h4>
-                    <p>致力於打造最便捷的線上購物環境，提供嚴選商品與透明價格，讓每位客戶都能買到心頭好。</p>
-                </div>
-                <div class="footer-sec">
-                    <h4>快速連結</h4>
-                    <div class="footer-links">
-                        <a href="1203.html">商城首頁</a>
-                        <a href="category.html?name=電子產品">電子產品專區</a>
-                        <a href="category.html?name=居家生活">居家生活專區</a>
-                        <a href="#">聯絡我們</a>
-                    </div>
-                </div>
-                <div class="footer-sec">
-                    <h4>客服聯絡</h4>
-                    <p>服務時間：週一至週五 09:00 - 18:00</p>
-                    <p>客服信箱：shop@service.com</p>
-                </div>
-            </div>
-            <div class="footer-bottom">&copy; 2025 我的購物商城 版權所有.</div>
-        </footer>
     </div>
 
     <button class="toggle-btn" onclick="toggleSidebar()">🛒</button>
     <aside class="sidebar" id="mainSidebar">
-        <div class="sidebar-header">
-            <span>我的購物清單</span>
-            <span onclick="toggleSidebar()" style="cursor:pointer;">&times;</span>
-        </div>
+        <h3 style="border-bottom: 1px solid #444; padding-bottom: 15px;">我的購物清單</h3>
         <div id="cartContent"></div>
-        <div class="sidebar-total">
-            <span>總計:</span>
-            <span id="cartTotalText">$ 0</span>
+        <div style="font-size:24px; margin-top:20px; border-top:1px solid #444; padding-top:15px;">
+            總計: <span id="cartTotalText">$ 0</span>
         </div>
-        <a href="cart.html" target="_blank" class="checkout-link">前往結帳分頁</a>
+        <a href="cart.html" style="display:block; margin-top:20px; background:#28a745; color:white; text-align:center; padding:15px; text-decoration:none; border-radius:5px; font-weight:bold;">前往結帳頁面</a>
     </aside>
 
     <script src="products.js"></script>
-
     <script>
         function toggleSidebar() { document.getElementById('mainSidebar').classList.toggle('active'); }
 
-        // 隨機推薦 (新增：讀取商品圖片)
-        function renderRecommendations() {
+        // 渲染商品：確保 GitHub 環境能讀取圖片
+        function renderHome() {
             const grid = document.getElementById('recommendationGrid');
-            if (typeof allProducts === 'undefined') return;
-            const shuffled = [...allProducts].sort(() => 0.5 - Math.random());
-            const selected = shuffled.slice(0, 10);
-            grid.innerHTML = '';
-            selected.forEach(p => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.onclick = () => window.open(`product.html?id=${p.id}`, '_blank');
-                card.innerHTML = `
-                    <div class="card-img-container">
-                        <img src="${p.image}" alt="${p.name}">
-                    </div>
+            if (typeof allProducts === 'undefined') {
+                grid.innerHTML = "<h3>數據載入失敗，請確認 products.js 檔案存在。</h3>";
+                return;
+            }
+            const selected = [...allProducts].sort(() => 0.5 - Math.random()).slice(0, 10);
+            grid.innerHTML = selected.map(p => `
+                <div class="product-card" onclick="window.open('product.html?id=${p.id}', '_blank')">
+                    <div class="card-img-container"><img src="${p.image}"></div>
                     <div class="card-info">
                         <div class="card-name">${p.name}</div>
                         <div class="card-price">$ ${p.price.toLocaleString()}</div>
-                    </div>`;
-                grid.appendChild(card);
-            });
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // 更新購物車顯示 (新增：更好的清單格式)
-        function refreshSidebarCart() {
+        function refreshCart() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const container = document.getElementById('cartContent');
-            const totalText = document.getElementById('cartTotalText');
             let total = 0, html = '';
-            
             cart.forEach(item => {
-                const sub = item.price * item.qty;
-                total += sub;
-                html += `
-                    <div class="sidebar-item">
-                        <div>
-                            <div style="font-weight:bold; color:#fff;">${item.name}</div>
-                            <div style="color:#aaa; font-size:12px;">$ ${item.price.toLocaleString()} x ${item.qty}</div>
-                        </div>
-                        <div style="color:#28a745; font-weight:bold;">$ ${sub.toLocaleString()}</div>
-                    </div>`;
+                total += item.price * item.qty;
+                html += `<div class="sidebar-item"><span>${item.name} x${item.qty}</span><span>$${(item.price*item.qty).toLocaleString()}</span></div>`;
             });
-            container.innerHTML = html || '<p style="text-align:center; color:#888;">購物車是空的</p>';
-            totalText.textContent = `$ ${total.toLocaleString()}`;
+            document.getElementById('cartContent').innerHTML = html || '<p>目前沒有商品</p>';
+            document.getElementById('cartTotalText').textContent = `$ ${total.toLocaleString()}`;
         }
 
-        // 【新增】監聽跨頁面 LocalStorage 變動
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'cart') {
-                refreshSidebarCart();
-            }
-        });
+        window.onload = () => { renderHome(); refreshCart(); };
+        window.addEventListener('storage', (e) => { if (e.key === 'cart') refreshCart(); });
 
-        // 輪播自動播放
+        // 輪播動畫
         let currentSlide = 0;
         setInterval(() => {
             currentSlide = (currentSlide + 1) % 3;
             const container = document.getElementById('slidesContainer');
             if(container) container.style.transform = `translateX(-${currentSlide * 33.333}%)`;
         }, 5000);
-
-        window.onload = () => { 
-            renderRecommendations(); 
-            refreshSidebarCart(); 
-        };
-        // 1. 切換側邊欄
-function toggleSidebar() { 
-    document.getElementById('mainSidebar').classList.toggle('active'); 
-}
-
-// 2. 更新購物車顯示
-function refreshSidebarCart() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const container = document.getElementById('cartContent');
-    const totalText = document.getElementById('cartTotalText');
-    let total = 0, html = '';
-    
-    cart.forEach(item => {
-        const sub = item.price * item.qty;
-        total += sub;
-        html += `
-            <div class="sidebar-item">
-                <div>
-                    <div style="font-weight:bold; color:#fff;">${item.name}</div>
-                    <div style="color:#aaa; font-size:12px;">$ ${item.price.toLocaleString()} x ${item.qty}</div>
-                </div>
-                <div style="color:#28a745; font-weight:bold;">$ ${sub.toLocaleString()}</div>
-            </div>`;
-    });
-    container.innerHTML = html || '<p style="text-align:center; color:#888;">購物車是空的</p>';
-    totalText.textContent = `$ ${total.toLocaleString()}`;
-}
-
-// 3. 跨頁面同步監聽
-window.addEventListener('storage', (e) => {
-    if (e.key === 'cart') refreshSidebarCart();
-});
-
-// 4. 修改妳原本的 renderRecommendations 讓它顯示圖片
-// 請找到妳原本的 renderRecommendations 函數，並將 card.innerHTML 改成：
-/*
-card.innerHTML = `
-    <div class="card-img"><img src="${p.image}" style="width:100%; height:100%; object-fit:cover;"></div>
-    <div class="card-info">
-        <div class="card-name">${p.name}</div>
-        <div class="card-price">$ ${p.price.toLocaleString()}</div>
-    </div>`;
-*/
-
-// 最後在 window.onload 裡面多加一個 refreshSidebarCart();
-const originalOnload = window.onload;
-window.onload = () => {
-    if (originalOnload) originalOnload();
-    refreshSidebarCart();
-};
     </script>
-    <button class="toggle-btn" onclick="toggleSidebar()">🛒</button>
-<aside class="sidebar" id="mainSidebar">
-    <div class="sidebar-header">
-        <span>我的購物清單</span>
-        <span onclick="toggleSidebar()" style="cursor:pointer;">&times;</span>
-    </div>
-    <div id="cartContent"></div>
-    <div class="sidebar-total">
-        <span>總計:</span>
-        <span id="cartTotalText">$ 0</span>
-    </div>
-    <a href="cart.html" target="_blank" class="checkout-link">前往結帳分頁</a>
-</aside>
 </body>
 </html>
