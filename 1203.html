@@ -23,7 +23,7 @@
         .product-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 25px; width: 100%; }
         .product-card { border: 1px solid #eee; background-color: white; transition: 0.3s; border-radius: 8px; overflow: hidden; text-align: center; cursor: pointer; }
         .product-card:hover { transform: translateY(-8px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-        .card-img-container { height: 220px; background-color: #f9f9f9; overflow: hidden; }
+        .card-img-container { height: 220px; background-color: #eee; overflow: hidden; }
         .card-img-container img { width: 100%; height: 100%; object-fit: cover; }
         .card-info { padding: 18px; }
         .card-name { font-size: 18px; margin: 8px 0; font-weight: bold; height: 44px; overflow: hidden; }
@@ -73,20 +73,25 @@
     </aside>
 
     <script src="products.js"></script>
-    <script>
-        function toggleSidebar() { document.getElementById('mainSidebar').classList.toggle('active'); }
 
-        // 渲染商品：確保 GitHub 環境能讀取圖片
+    <script>
+        function toggleSidebar() { 
+            document.getElementById('mainSidebar').classList.toggle('active'); 
+        }
+
+        // 渲染商品：確保從 products.js 抓取圖片
         function renderHome() {
             const grid = document.getElementById('recommendationGrid');
             if (typeof allProducts === 'undefined') {
-                grid.innerHTML = "<h3>數據載入失敗，請確認 products.js 檔案存在。</h3>";
+                grid.innerHTML = "<h3>正在加載商品資料，請稍候...</h3>";
                 return;
             }
             const selected = [...allProducts].sort(() => 0.5 - Math.random()).slice(0, 10);
             grid.innerHTML = selected.map(p => `
                 <div class="product-card" onclick="window.open('product.html?id=${p.id}', '_blank')">
-                    <div class="card-img-container"><img src="${p.image}"></div>
+                    <div class="card-img-container">
+                        <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/400x300?text=圖片載入中'">
+                    </div>
                     <div class="card-info">
                         <div class="card-name">${p.name}</div>
                         <div class="card-price">$ ${p.price.toLocaleString()}</div>
@@ -106,7 +111,13 @@
             document.getElementById('cartTotalText').textContent = `$ ${total.toLocaleString()}`;
         }
 
-        window.onload = () => { renderHome(); refreshCart(); };
+        // 初始化
+        window.onload = () => { 
+            renderHome(); 
+            refreshCart(); 
+        };
+
+        // 監聽側邊欄同步
         window.addEventListener('storage', (e) => { if (e.key === 'cart') refreshCart(); });
 
         // 輪播動畫
