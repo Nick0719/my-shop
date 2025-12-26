@@ -5,23 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>我的購物商城 - 官方首頁</title>
     <style>
-        /* --- 1. 基礎佈局 --- */
-        * { box-sizing: border-box; }
-        body { margin: 0; padding: 0; font-family: "Microsoft JhengHei", Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; }
-        .main-container { width: 95%; max-width: 1400px; padding: 20px 0; }
+        /* --- 基礎佈局 --- */
+        * { box-sizing: border-box; scroll-behavior: smooth; }
+        body { margin: 0; padding: 0; font-family: "Microsoft JhengHei", Arial, sans-serif; background-color: #f4f4f4; }
+        .main-container { width: 95%; max-width: 1400px; margin: 0 auto; padding: 20px 0; }
 
         /* 導覽列 */
-        header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+        header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
         .logo { background: #333; color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
         nav { display: flex; gap: 10px; overflow-x: auto; white-space: nowrap; padding-bottom: 5px; flex: 1; -webkit-overflow-scrolling: touch; }
         nav::-webkit-scrollbar { display: none; }
-        nav a { text-decoration: none; color: #333; background: white; border: 1.5px solid #333; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: bold; flex-shrink: 0; }
+        nav a { text-decoration: none; color: #333; background: white; border: 1.5px solid #333; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: bold; flex-shrink: 0; transition: 0.3s; }
+        nav a:hover { background: #333; color: white; }
 
-        /* 輪播圖 */
+        /* 🔎 搜尋框樣式 */
+        .search-container { margin-bottom: 25px; position: relative; }
+        .search-input { width: 100%; padding: 12px 20px; border-radius: 30px; border: 1px solid #ddd; outline: none; font-size: 16px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+        /* 🔥 限時搶購區 */
+        .flash-sale { background: linear-gradient(90deg, #ff4757, #ff6b81); color: white; padding: 15px 20px; border-radius: 12px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        .timer-box { font-family: 'Courier New', Courier, monospace; font-size: 20px; font-weight: bold; background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 5px; }
+
+        /* 🖼️ 輪播圖 (含手動按鈕) */
         .banner { width: 100%; height: 180px; border-radius: 12px; overflow: hidden; margin-bottom: 30px; position: relative; }
         @media (min-width: 768px) { .banner { height: 400px; } }
         .slides { display: flex; width: 300%; height: 100%; transition: transform 0.6s ease; }
         .slide { width: 33.333%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: bold; }
+
+        /* 新增：手動按鈕樣式 */
+        .banner-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.3); color: white; border: none; padding: 15px 10px; cursor: pointer; z-index: 10; font-size: 20px; transition: 0.3s; }
+        .banner-btn:hover { background: rgba(0,0,0,0.7); }
+        .banner-btn.prev { left: 0; border-radius: 0 5px 5px 0; }
+        .banner-btn.next { right: 0; border-radius: 5px 0 0 5px; }
 
         /* 商品網格 */
         .section-title { font-size: 22px; font-weight: bold; margin: 30px 0 20px; border-left: 6px solid #007bff; padding-left: 12px; }
@@ -29,37 +44,25 @@
         @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(5, 1fr); gap: 25px; } }
 
         .card { background: white; border-radius: 10px; overflow: hidden; border: 1px solid #eee; cursor: pointer; transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .card img { width: 100%; height: 160px; object-fit: cover; }
         @media (min-width: 768px) { .card img { height: 220px; } }
         .card-info { padding: 12px; }
         .card-name { font-size: 14px; font-weight: bold; height: 40px; overflow: hidden; margin-bottom: 8px; }
         .card-price { color: #d9534f; font-size: 18px; font-weight: bold; }
 
-        /* --- 2. 補回：頁腳導覽列樣式 --- */
-        .site-footer { background-color: #222; color: #ccc; padding: 50px 0 30px; width: 100%; margin-top: 50px; }
-        .footer-container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            display: flex; 
-            flex-direction: column; /* 手機垂直排列 */
-            gap: 40px; 
-            padding: 0 20px; 
-        }
-        @media (min-width: 768px) { 
-            .footer-container { flex-direction: row; justify-content: space-between; } /* 電腦版橫向排列 */
-        }
-        .footer-sec { flex: 1; }
-        .footer-sec h4 { color: #fff; margin-bottom: 20px; font-size: 18px; border-bottom: 1px solid #444; padding-bottom: 10px; }
-        .footer-sec p { font-size: 14px; line-height: 1.6; }
-        .footer-links a { color: #aaa; text-decoration: none; margin-bottom: 12px; display: block; transition: 0.3s; font-size: 14px; }
-        .footer-links a:hover { color: #fff; transform: translateX(5px); }
-        .footer-bottom { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #333; font-size: 13px; color: #666; }
+        /* 頁腳 */
+        footer { background: #222; color: #ccc; padding: 40px 20px; margin-top: 50px; text-align: center; border-radius: 15px 15px 0 0; }
+        .footer-link { color: #ccc; text-decoration: none; transition: 0.3s; }
+        .footer-link:hover { color: white; }
 
-        /* 側邊欄與按鈕 */
+        /* 側邊欄 */
         .sidebar { position: fixed; top: 0; right: -100%; width: 85%; height: 100%; background: #222; color: #eee; padding: 20px; transition: 0.4s; z-index: 2000; box-sizing: border-box; }
         @media (min-width: 768px) { .sidebar { width: 320px; right: -320px; } }
         .sidebar.active { right: 0; }
-        .cart-toggle { position: fixed; bottom: 25px; right: 25px; width: 65px; height: 65px; background: #007bff; color: white; border: none; border-radius: 50%; font-size: 28px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2001; }
+        .cart-toggle { position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px; background: #007bff; color: white; border: none; border-radius: 50%; font-size: 25px; cursor: pointer; z-index: 2001; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        
+        #backToTop { position: fixed; bottom: 100px; right: 25px; width: 45px; height: 45px; background: white; border: 1px solid #ddd; border-radius: 50%; display: none; cursor: pointer; z-index: 1999; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -68,6 +71,7 @@
     <header>
         <div class="logo">GO</div>
         <nav>
+            <a href="1203.html">首頁</a>
             <a href="category.html?name=電子產品">電子產品</a>
             <a href="category.html?name=居家生活">居家生活</a>
             <a href="category.html?name=服飾配件">服飾配件</a>
@@ -75,68 +79,109 @@
         </nav>
     </header>
 
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="搜尋商品名稱...">
+    </div>
+
+    <div class="flash-sale">
+        <span>🔥 限時特賣中</span>
+        <span class="timer-box" id="timer">02:00:00</span>
+    </div>
+
     <div class="banner">
         <div class="slides" id="slideBox">
-            <div class="slide" style="background: linear-gradient(45deg, #FF512F, #DD2476);">年終特惠</div>
-            <div class="slide" style="background: linear-gradient(45deg, #2193b0, #6dd5ed);">新品推薦</div>
-            <div class="slide" style="background: linear-gradient(45deg, #11998e, #38ef7d);">環保週</div>
+            <div class="slide" style="background: linear-gradient(45deg, #FF512F, #DD2476);">年終大促 5折起</div>
+            <div class="slide" style="background: linear-gradient(45deg, #2193b0, #6dd5ed);">質感生活 新品上市</div>
+            <div class="slide" style="background: linear-gradient(45deg, #11998e, #38ef7d);">環保週 全店免運</div>
         </div>
+        <button class="banner-btn prev" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="banner-btn next" onclick="moveSlide(1)">&#10095;</button>
     </div>
 
     <div class="section-title">每日推薦商品</div>
     <div id="recommendationGrid" class="product-grid"></div>
 
-    <footer class="site-footer">
-        <div class="footer-container">
-            <div class="footer-sec">
-                <h4>關於我們</h4>
-                <p>致力於打造最便捷的線上購物環境，提供嚴選商品與透明價格，讓每位客戶都能買到心頭好。</p>
+    <footer>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; text-align: left; max-width: 1200px; margin: 0 auto;">
+            <div>
+                <h4 style="color:white;">關於我們</h4>
+                <p style="font-size:14px; line-height:1.6;">致力於提供最高品質的嚴選商品，您的滿意是我們最大的追求。</p>
             </div>
-            <div class="footer-sec">
-                <h4>快速連結</h4>
-                <div class="footer-links">
-                    <a href="index.html">商城首頁</a>
-                    <a href="category.html?name=電子產品">電子產品專區</a>
-                    <a href="category.html?name=居家生活">居家生活專區</a>
-                    <a href="#">聯絡我們</a>
-                </div>
+            <div>
+                <h4 style="color:white;">快速連結</h4>
+                <a href="1203.html" class="footer-link">商城首頁</a><br><br>
+                <a href="cart.html" class="footer-link">我的購物車</a>
             </div>
-            <div class="footer-sec">
-                <h4>客服聯絡</h4>
-                <p>服務時間：週一至週五 09:00 - 18:00</p>
-                <p>客服信箱：shop@service.com</p>
+            <div>
+                <h4 style="color:white;">客服聯絡</h4>
+                <p style="font-size:14px;">Email: service@shop.com</p>
+                <p style="font-size:14px;">Tel: 0800-000-123</p>
             </div>
         </div>
-        <div class="footer-bottom">&copy; 2025 我的購物商城 版權所有.</div>
+        <p style="margin-top:40px; border-top: 1px solid #333; padding-top:20px; font-size:12px;">&copy; 2025 我的購物商城 版權所有</p>
     </footer>
 </div>
 
+<button id="backToTop" onclick="window.scrollTo(0,0)">↑</button>
 <button class="cart-toggle" onclick="toggleCart()">🛒</button>
+
 <aside class="sidebar" id="sidebar">
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #444; padding-bottom:15px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #444; padding-bottom:10px;">
         <h3 style="margin:0;">🛒 購物清單</h3>
-        <span onclick="toggleCart()" style="font-size:35px; cursor:pointer;">&times;</span>
+        <span onclick="toggleCart()" style="cursor:pointer; font-size:24px;">&times;</span>
     </div>
     <div id="cartList" style="margin-top:20px;"></div>
     <div style="margin-top:20px; border-top:1px solid #444; padding-top:15px;">
-        <div style="display:flex; justify-content:space-between; font-size:22px; font-weight:bold;">
+        <div style="display:flex; justify-content:space-between; font-size:20px; font-weight:bold;">
             <span>總計:</span>
             <span id="totalTxt" style="color:#28a745;">$ 0</span>
         </div>
-        <a href="cart.html" style="display:block; margin-top:25px; background:#28a745; color:white; text-align:center; padding:16px; text-decoration:none; border-radius:8px; font-weight:bold;">前往結帳</a>
+        <a href="cart.html" style="display:block; margin-top:20px; background:#28a745; color:white; text-align:center; padding:15px; text-decoration:none; border-radius:8px; font-weight:bold;">前往結帳</a>
     </div>
 </aside>
 
 <script src="products.js"></script>
 <script>
+    // 1. 搜尋功能 (優化清除後自動恢復)
+ document.getElementById('searchInput').addEventListener('input', (e) => {
+    const term = e.target.value.trim().toLowerCase(); // trim() 去除前後空白
+    
+    if (term === "") {
+        // 關鍵修改：如果搜尋框清空了，就呼叫預設的 render() 顯示隨機推薦
+        render(); 
+    } else {
+        // 如果有文字，則進行過濾
+        const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term));
+        render(filtered); 
+    }
+ });
+    // 2. 倒數計時功能
+    let timeLeft = 7200; 
+    setInterval(() => {
+        if(timeLeft <= 0) return;
+        timeLeft--;
+        let h = Math.floor(timeLeft / 3600);
+        let m = Math.floor((timeLeft % 3600) / 60);
+        let s = timeLeft % 60;
+        document.getElementById('timer').innerText = 
+            `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    }, 1000);
+
+    // 3. 返回頂部
+    window.onscroll = () => {
+        document.getElementById('backToTop').style.display = (window.scrollY > 300) ? 'block' : 'none';
+    };
+
     function toggleCart() { document.getElementById('sidebar').classList.toggle('active'); }
 
-    function render() {
+    // 4. 渲染商品
+    function render(data = null) {
         const grid = document.getElementById('recommendationGrid');
         if (typeof allProducts === 'undefined') return;
-        const list = [...allProducts].sort(() => 0.5 - Math.random()).slice(0, 10);
+        const list = data || [...allProducts].sort(() => 0.5 - Math.random()).slice(0, 10);
+        
         grid.innerHTML = list.map(p => `
-            <div class="card" onclick="window.open('product.html?id=${p.id}', '_blank')">
+            <div class="card" onclick="window.location.href='product.html?id=${p.id}'">
                 <img src="${p.image}">
                 <div class="card-info">
                     <div class="card-name">${p.name}</div>
@@ -146,29 +191,39 @@
         `).join('');
     }
 
+    // 5. 購物車同步
     function updateCart() {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const listContainer = document.getElementById('cartList');
         let total = 0, html = '';
+        
         cart.forEach(i => {
             total += i.price * i.qty;
-            html += `<div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:14px; border-bottom:1px solid #333; padding-bottom:8px;">
+            html += `<div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:14px;">
                 <span>${i.name} x${i.qty}</span>
                 <span style="color:#28a745;">$${(i.price*i.qty).toLocaleString()}</span>
             </div>`;
         });
-        document.getElementById('cartList').innerHTML = html || '<p style="text-align:center; color:#888;">購物車是空的</p>';
+        listContainer.innerHTML = html || '<p style="color:#888; text-align:center;">目前購物車空空的</p>';
         document.getElementById('totalTxt').innerText = `$ ${total.toLocaleString()}`;
+    }
+
+    // 6. 輪播控制邏輯 (支援自動 + 手動)
+    let idx = 0;
+    let slideTimer = setInterval(() => moveSlide(1), 4000);
+
+    function moveSlide(step) {
+        idx = (idx + step + 3) % 3; // 確保循環
+        const box = document.getElementById('slideBox');
+        box.style.transform = `translateX(-${idx * 33.333}%)`;
+        
+        // 重置自動計時器
+        clearInterval(slideTimer);
+        slideTimer = setInterval(() => moveSlide(1), 4000);
     }
 
     window.onload = () => { render(); updateCart(); };
     window.addEventListener('storage', updateCart);
-
-    let idx = 0;
-    setInterval(() => {
-        idx = (idx + 1) % 3;
-        const box = document.getElementById('slideBox');
-        if(box) box.style.transform = `translateX(-${idx * 33.333}%)`;
-    }, 5000);
 </script>
 </body>
 </html>
